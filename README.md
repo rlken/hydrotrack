@@ -1,4 +1,4 @@
-# 💧 HydroTrack — Complete Setup Guide (Mac)
+# HydroTrack — Complete Setup Guide (Mac)
 
 This guide will walk you through every step from a fresh Mac to a running HydroTrack application.
 
