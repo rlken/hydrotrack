@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HydroTrack — Water Quality Monitoring</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:fragment="layout(content)" class="app-layout">
+    <button class="mobile-toggle">☰</button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h1>💧 HydroTrack</h1>
+            <span>NU Manila Main Building</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a th:href="@{/dashboard}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/dashboard')} ? 'active'">
+                    <span class="icon">📊</span> Dashboard
+                </a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Management</div>
+                <a th:href="@{/fountains}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/fountains')} ? 'active'">
+                    <span class="icon">🚰</span> Fountains
+                </a>
+                <a th:href="@{/quality}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/quality')} ? 'active'">
+                    <span class="icon">💧</span> Water Quality
+                </a>
+                <a th:href="@{/schedules}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/schedules')} ? 'active'">
+                    <span class="icon">📅</span> Filter Schedules
+                </a>
+                <a th:href="@{/maintenance}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/maintenance')} ? 'active'">
+                    <span class="icon">🔧</span> Maintenance
+                </a>
+            </div>
+            <div class="nav-section" sec:authorize="hasRole('ADMIN')">
+                <div class="nav-section-title">Admin</div>
+                <a th:href="@{/admin/users}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/admin')} ? 'active'">
+                    <span class="icon">👥</span> User Management
+                </a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" th:text="${#strings.toUpperCase(#strings.substring(#authentication.name,0,1))}">A</div>
+                <div>
+                    <div style="font-weight:600;color:var(--text-primary);font-size:14px" th:text="${#authentication.name}">admin</div>
+                    <div style="font-size:11px" th:each="auth : ${#authentication.authorities}" th:text="${#strings.replace(auth,'ROLE_','')}">ADMIN</div>
+                </div>
+            </div>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Sign Out</button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div th:if="${success}" class="alert alert-success">✅ <span th:text="${success}"></span></div>
+        <div th:if="${error}" class="alert alert-error">❌ <span th:text="${error}"></span></div>
+        <div th:replace="${content}"></div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

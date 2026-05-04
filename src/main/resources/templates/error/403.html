@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>Access Denied — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="empty-state" style="padding-top:100px">
+        <div class="icon">🔒</div>
+        <h2 style="margin-bottom:8px">Access Denied</h2>
+        <p th:text="${errorMessage}">You do not have permission to access this page.</p>
+        <a th:href="@{/dashboard}" class="btn btn-primary mt-2">← Back to Dashboard</a>
+    </div>
+</section>
+</div>
+</body>
+</html>

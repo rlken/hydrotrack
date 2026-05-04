@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>Record Quality — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="page-header">
+        <div><h2>Record Water Quality</h2><p>Submit a new water quality inspection</p></div>
+        <a th:href="@{/quality}" class="btn btn-secondary btn-sm">← Back</a>
+    </div>
+    <div class="form-container">
+        <form th:action="@{/quality/new}" method="post">
+            <div class="form-group">
+                <label>Fountain</label>
+                <select name="fountainId" class="form-control" required>
+                    <option value="">Select a fountain...</option>
+                    <option th:each="f : ${fountains}" th:value="${f.fountainId}" th:text="${f.fountainCode + ' — F' + f.floorNumber + ' — ' + f.locationDescription}"></option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>pH Level (0-14)</label>
+                    <input type="number" name="phLevel" class="form-control" step="0.01" min="0" max="14" placeholder="e.g., 7.00">
+                </div>
+                <div class="form-group">
+                    <label>Turbidity (NTU)</label>
+                    <input type="number" name="turbidity" class="form-control" step="0.01" min="0" placeholder="e.g., 0.50">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>TDS (ppm)</label>
+                    <input type="number" name="tds" class="form-control" step="0.01" min="0" placeholder="e.g., 120.00">
+                </div>
+                <div class="form-group">
+                    <label>Temperature (°C)</label>
+                    <input type="number" name="temperature" class="form-control" step="0.01" placeholder="e.g., 24.5">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Cleanliness Rating</label>
+                <select name="cleanlinessRating" class="form-control" required>
+                    <option value="">Select rating...</option>
+                    <option value="EXCELLENT">⭐ Excellent</option>
+                    <option value="GOOD">✅ Good</option>
+                    <option value="FAIR">⚡ Fair</option>
+                    <option value="POOR">⚠️ Poor</option>
+                    <option value="CRITICAL">🚨 Critical</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea name="notes" class="form-control" placeholder="Optional observations..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Record</button>
+        </form>
+    </div>
+</section>
+</div>
+</body>
+</html>

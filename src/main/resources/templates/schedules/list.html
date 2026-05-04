@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><title>Filter Schedules — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="page-header">
+        <div><h2>Filter Schedules</h2><p>Manage filter replacement schedules for all fountains</p></div>
+        <a th:href="@{/schedules/new}" class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN','TECHNICIAN')">+ New Schedule</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Fountain</th><th>Floor</th><th>Filter Type</th><th>Interval</th><th>Next Date</th><th>Priority</th><th>Status</th><th sec:authorize="hasAnyRole('ADMIN','TECHNICIAN')">Actions</th></tr></thead>
+            <tbody>
+                <tr th:each="s : ${allSchedules}">
+                    <td th:text="${s.fountain.fountainCode}"></td>
+                    <td th:text="'F' + ${s.fountain.floorNumber}"></td>
+                    <td th:text="${s.filterType}"></td>
+                    <td th:text="${s.replacementIntervalDays} + ' days'"></td>
+                    <td th:text="${s.nextReplacementDate}"></td>
+                    <td><span class="badge" th:classappend="${s.priority == 'URGENT'} ? 'badge-red' : (${s.priority == 'HIGH'} ? 'badge-orange' : (${s.priority == 'LOW'} ? 'badge-gray' : 'badge-blue'))" th:text="${s.priority}"></span></td>
+                    <td><span class="badge" th:classappend="${s.status == 'COMPLETED'} ? 'badge-green' : (${s.status == 'OVERDUE'} ? 'badge-red' : (${s.status == 'CANCELLED'} ? 'badge-gray' : 'badge-blue'))" th:text="${s.status}"></span></td>
+                    <td sec:authorize="hasAnyRole('ADMIN','TECHNICIAN')">
+                        <a th:href="@{/schedules/edit/{id}(id=${s.scheduleId})}" class="btn btn-sm btn-secondary">Edit</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(allSchedules)}"><td colspan="8" class="text-center" style="padding:30px;color:var(--text-tertiary)">No schedules yet</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</div>
+</body>
+</html>

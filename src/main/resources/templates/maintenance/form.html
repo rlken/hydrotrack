@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>Log Maintenance — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="page-header">
+        <div><h2>Log Maintenance</h2><p>Record a completed maintenance task</p></div>
+        <a th:href="@{/maintenance}" class="btn btn-secondary btn-sm">← Back</a>
+    </div>
+    <div class="form-container">
+        <form th:action="@{/maintenance/new}" method="post">
+            <div class="form-group">
+                <label>Fountain</label>
+                <select name="fountainId" class="form-control" required>
+                    <option value="">Select fountain...</option>
+                    <option th:each="f : ${fountains}" th:value="${f.fountainId}" th:text="${f.fountainCode + ' — F' + f.floorNumber + ' — ' + f.locationDescription}"></option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Maintenance Type</label>
+                    <select name="maintenanceType" class="form-control" required>
+                        <option value="FILTER_CHANGE">Filter Change</option>
+                        <option value="CLEANING">Cleaning</option>
+                        <option value="REPAIR">Repair</option>
+                        <option value="INSPECTION">Inspection</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Related Schedule (optional)</label>
+                    <select name="scheduleId" class="form-control">
+                        <option value="">None</option>
+                        <option th:each="s : ${schedules}" th:value="${s.scheduleId}" th:text="${s.fountain.fountainCode + ' — ' + s.filterType + ' — Due: ' + s.nextReplacementDate}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" class="form-control" placeholder="What was done..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Parts Replaced</label>
+                    <input type="text" name="partsReplaced" class="form-control" placeholder="e.g., Carbon Filter CF-200">
+                </div>
+                <div class="form-group">
+                    <label>Cost (₱)</label>
+                    <input type="number" name="cost" class="form-control" step="0.01" min="0" placeholder="0.00">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Log Maintenance</button>
+        </form>
+    </div>
+</section>
+</div>
+</body>
+</html>

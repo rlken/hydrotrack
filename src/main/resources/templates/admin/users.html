@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>User Management — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="page-header">
+        <div><h2>User Management</h2><p>Manage system users and their roles</p></div>
+    </div>
+
+    <!-- Add User Form -->
+    <div class="card mb-3">
+        <div class="card-header"><span>Add New User</span></div>
+        <div class="card-body">
+            <form th:action="@{/admin/users/new}" method="post">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="fullName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role" class="form-control" required>
+                        <option th:each="r : ${roles}" th:value="${r.roleName}" th:text="${r.roleName + ' — ' + r.description}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Create User</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Username</th><th>Full Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.username}"></td>
+                    <td th:text="${u.fullName}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td>
+                        <span th:each="r : ${u.roles}" class="badge badge-blue" th:text="${r.roleName}"></span>
+                    </td>
+                    <td>
+                        <span class="badge" th:classappend="${u.isActive} ? 'badge-green' : 'badge-red'" th:text="${u.isActive} ? 'Active' : 'Disabled'"></span>
+                    </td>
+                    <td>
+                        <form th:action="@{/admin/users/edit/{id}(id=${u.userId})}" method="post" style="display:inline">
+                            <input type="hidden" name="fullName" th:value="${u.fullName}">
+                            <input type="hidden" name="email" th:value="${u.email}">
+                            <input type="hidden" name="role" th:value="${#lists.isEmpty(u.roles)} ? '' : ${u.roles.iterator().next().roleName}">
+                            <input type="hidden" name="isActive" th:value="${!u.isActive}">
+                            <button type="submit" class="btn btn-sm btn-secondary" th:text="${u.isActive} ? 'Disable' : 'Enable'">Toggle</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</div>
+</body>
+</html>

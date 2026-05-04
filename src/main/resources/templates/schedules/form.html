@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>Schedule Form — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="page-header">
+        <div><h2 th:text="${schedule != null} ? 'Edit Schedule' : 'New Filter Schedule'">New Filter Schedule</h2></div>
+        <a th:href="@{/schedules}" class="btn btn-secondary btn-sm">← Back</a>
+    </div>
+    <div class="form-container">
+        <form th:action="${schedule != null} ? @{/schedules/edit/{id}(id=${schedule.scheduleId})} : @{/schedules/new}" method="post">
+            <div class="form-group" th:if="${schedule == null}">
+                <label>Fountain</label>
+                <select name="fountainId" class="form-control" required>
+                    <option value="">Select fountain...</option>
+                    <option th:each="f : ${fountains}" th:value="${f.fountainId}" th:text="${f.fountainCode + ' — F' + f.floorNumber}"></option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Filter Type</label>
+                    <select name="filterType" class="form-control" required>
+                        <option value="SEDIMENT" th:selected="${schedule != null && schedule.filterType == 'SEDIMENT'}">Sediment</option>
+                        <option value="CARBON" th:selected="${schedule != null && schedule.filterType == 'CARBON'}">Carbon</option>
+                        <option value="REVERSE_OSMOSIS" th:selected="${schedule != null && schedule.filterType == 'REVERSE_OSMOSIS'}">Reverse Osmosis</option>
+                        <option value="UV" th:selected="${schedule != null && schedule.filterType == 'UV'}">UV</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Replacement Interval (days)</label>
+                    <input type="number" name="replacementIntervalDays" class="form-control" min="1" th:value="${schedule != null} ? ${schedule.replacementIntervalDays} : '90'" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Next Replacement Date</label>
+                    <input type="date" name="nextReplacementDate" class="form-control" th:value="${schedule != null} ? ${schedule.nextReplacementDate} : ''" required>
+                </div>
+                <div class="form-group">
+                    <label>Priority</label>
+                    <select name="priority" class="form-control">
+                        <option value="LOW" th:selected="${schedule != null && schedule.priority == 'LOW'}">Low</option>
+                        <option value="NORMAL" th:selected="${schedule == null || schedule.priority == 'NORMAL'}">Normal</option>
+                        <option value="HIGH" th:selected="${schedule != null && schedule.priority == 'HIGH'}">High</option>
+                        <option value="URGENT" th:selected="${schedule != null && schedule.priority == 'URGENT'}">Urgent</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" th:if="${schedule != null}">
+                <label>Status</label>
+                <select name="status" class="form-control">
+                    <option value="SCHEDULED" th:selected="${schedule.status == 'SCHEDULED'}">Scheduled</option>
+                    <option value="OVERDUE" th:selected="${schedule.status == 'OVERDUE'}">Overdue</option>
+                    <option value="COMPLETED" th:selected="${schedule.status == 'COMPLETED'}">Completed</option>
+                    <option value="CANCELLED" th:selected="${schedule.status == 'CANCELLED'}">Cancelled</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" th:text="${schedule != null} ? 'Update Schedule' : 'Create Schedule'">Create Schedule</button>
+        </form>
+    </div>
+</section>
+</div>
+</body>
+</html>

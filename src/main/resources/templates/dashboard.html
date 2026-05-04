@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h2>Dashboard</h2>
+            <p>Overview of water fountain status across NU Manila Main Building</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card blue">
+            <div class="stat-icon">🚰</div>
+            <div class="stat-value" th:text="${totalFountains}">0</div>
+            <div class="stat-label">Total Fountains</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-icon">✅</div>
+            <div class="stat-value" th:text="${operationalCount}">0</div>
+            <div class="stat-label">Operational</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-value" th:text="${needsMaintenanceCount}">0</div>
+            <div class="stat-label">Needs Maintenance</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-icon">🚫</div>
+            <div class="stat-value" th:text="${outOfServiceCount}">0</div>
+            <div class="stat-label">Out of Service</div>
+        </div>
+    </div>
+
+    <!-- Second row stats -->
+    <div class="stats-grid">
+        <div class="stat-card blue">
+            <div class="stat-icon">📋</div>
+            <div class="stat-value" th:text="${totalRecords}">0</div>
+            <div class="stat-label">Quality Records</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-value" th:text="${excellentCount}">0</div>
+            <div class="stat-label">Excellent Ratings</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-icon">🔴</div>
+            <div class="stat-value" th:text="${overdueFilters}">0</div>
+            <div class="stat-label">Overdue Filters</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-icon">🔧</div>
+            <div class="stat-value" th:text="${maintenanceThisMonth}">0</div>
+            <div class="stat-label">Maintenance This Month</div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <!-- Recent Quality Records -->
+        <div class="table-container">
+            <div class="card-header">
+                <span>Recent Quality Records</span>
+                <a th:href="@{/quality}" class="btn btn-sm btn-secondary">View All</a>
+            </div>
+            <table>
+                <thead><tr><th>Fountain</th><th>Rating</th><th>pH</th></tr></thead>
+                <tbody>
+                    <tr th:each="r : ${recentRecords}">
+                        <td th:text="${r.fountain.fountainCode}"></td>
+                        <td>
+                            <span class="badge"
+                                th:classappend="${r.cleanlinessRating == 'EXCELLENT'} ? 'badge-green' : (${r.cleanlinessRating == 'GOOD'} ? 'badge-blue' : (${r.cleanlinessRating == 'FAIR'} ? 'badge-yellow' : (${r.cleanlinessRating == 'POOR'} ? 'badge-orange' : 'badge-red')))"
+                                th:text="${r.cleanlinessRating}"></span>
+                        </td>
+                        <td th:text="${r.phLevel}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentRecords)}">
+                        <td colspan="3" class="text-center" style="padding:24px;color:var(--text-tertiary)">No records yet</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Overdue Filters -->
+        <div class="table-container">
+            <div class="card-header">
+                <span>⚠️ Overdue Filters</span>
+                <a th:href="@{/schedules}" class="btn btn-sm btn-secondary">View All</a>
+            </div>
+            <table>
+                <thead><tr><th>Fountain</th><th>Filter</th><th>Due Date</th></tr></thead>
+                <tbody>
+                    <tr th:each="s : ${overdueSchedules}">
+                        <td th:text="${s.fountain.fountainCode}"></td>
+                        <td th:text="${s.filterType}"></td>
+                        <td>
+                            <span class="badge badge-red" th:text="${s.nextReplacementDate}"></span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(overdueSchedules)}">
+                        <td colspan="3" class="text-center" style="padding:24px;color:var(--text-tertiary)">No overdue filters 🎉</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</div>
+</body>
+</html>

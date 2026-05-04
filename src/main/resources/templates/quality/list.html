@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><title>Water Quality — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h2>Water Quality Records</h2>
+            <p>All water quality inspections and readings</p>
+        </div>
+        <a th:href="@{/quality/new}" class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN','INSPECTOR')">+ New Record</a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Date</th><th>Fountain</th><th>Floor</th><th>pH</th><th>Turbidity</th><th>TDS</th><th>Temp °C</th><th>Rating</th><th>Inspector</th></tr></thead>
+            <tbody>
+                <tr th:each="r : ${records}">
+                    <td th:text="${#temporals.format(r.recordedAt, 'MMM dd, yyyy HH:mm')}"></td>
+                    <td><a th:href="@{/fountains/{id}(id=${r.fountain.fountainId})}" th:text="${r.fountain.fountainCode}"></a></td>
+                    <td th:text="'F' + ${r.fountain.floorNumber}"></td>
+                    <td th:text="${r.phLevel}"></td>
+                    <td th:text="${r.turbidity}"></td>
+                    <td th:text="${r.tds}"></td>
+                    <td th:text="${r.temperature}"></td>
+                    <td><span class="badge" th:classappend="${r.cleanlinessRating == 'EXCELLENT'} ? 'badge-green' : (${r.cleanlinessRating == 'GOOD'} ? 'badge-blue' : (${r.cleanlinessRating == 'FAIR'} ? 'badge-yellow' : (${r.cleanlinessRating == 'POOR'} ? 'badge-orange' : 'badge-red')))" th:text="${r.cleanlinessRating}"></span></td>
+                    <td th:text="${r.recordedBy.fullName}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(records)}"><td colspan="9" class="text-center" style="padding:30px;color:var(--text-tertiary)">No quality records yet</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</div>
+</body>
+</html>

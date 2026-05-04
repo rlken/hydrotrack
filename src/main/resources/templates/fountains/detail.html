@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><title>Fountain Detail — HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::section})}">
+<section>
+    <div class="page-header">
+        <div>
+            <h2 th:text="${fountain.fountainCode}">NM-G01</h2>
+            <p th:text="${fountain.locationDescription}">Ground Floor Lobby</p>
+        </div>
+        <div style="display:flex;gap:8px">
+            <a th:href="@{/fountains/edit/{id}(id=${fountain.fountainId})}" class="btn btn-secondary btn-sm" sec:authorize="hasAnyRole('ADMIN','TECHNICIAN')">Edit</a>
+            <a th:href="@{/fountains}" class="btn btn-secondary btn-sm">← Back</a>
+        </div>
+    </div>
+
+    <!-- Fountain Info -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <span class="badge" th:classappend="${fountain.status == 'OPERATIONAL'} ? 'badge-green' : (${fountain.status == 'NEEDS_MAINTENANCE'} ? 'badge-orange' : (${fountain.status == 'OUT_OF_SERVICE'} ? 'badge-red' : 'badge-yellow'))"
+                        th:text="${#strings.replace(fountain.status,'_',' ')}">OPERATIONAL</span>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Type</div>
+                    <div class="detail-value" th:text="${#strings.replace(fountain.fountainType,'_',' ')}"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Floor</div>
+                    <div class="detail-value" th:text="'Floor ' + ${fountain.floorNumber}"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Installed</div>
+                    <div class="detail-value" th:text="${fountain.installationDate}">—</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Last Filter Change</div>
+                    <div class="detail-value" th:text="${fountain.lastFilterChange} ?: 'N/A'"></div>
+                </div>
+                <div class="detail-item" th:if="${latestQuality != null}">
+                    <div class="detail-label">Latest Quality</div>
+                    <span class="badge" th:classappend="${latestQuality.cleanlinessRating == 'EXCELLENT'} ? 'badge-green' : (${latestQuality.cleanlinessRating == 'GOOD'} ? 'badge-blue' : (${latestQuality.cleanlinessRating == 'FAIR'} ? 'badge-yellow' : (${latestQuality.cleanlinessRating == 'POOR'} ? 'badge-orange' : 'badge-red')))"
+                        th:text="${latestQuality.cleanlinessRating}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quality History -->
+    <div class="table-container mb-3">
+        <div class="card-header"><span>💧 Water Quality History</span></div>
+        <table>
+            <thead><tr><th>Date</th><th>pH</th><th>Turbidity</th><th>TDS</th><th>Temp</th><th>Rating</th><th>Inspector</th></tr></thead>
+            <tbody>
+                <tr th:each="r : ${qualityRecords}">
+                    <td th:text="${#temporals.format(r.recordedAt, 'MMM dd, yyyy HH:mm')}"></td>
+                    <td th:text="${r.phLevel}"></td>
+                    <td th:text="${r.turbidity}"></td>
+                    <td th:text="${r.tds}"></td>
+                    <td th:text="${r.temperature}"></td>
+                    <td><span class="badge" th:classappend="${r.cleanlinessRating == 'EXCELLENT'} ? 'badge-green' : (${r.cleanlinessRating == 'GOOD'} ? 'badge-blue' : (${r.cleanlinessRating == 'FAIR'} ? 'badge-yellow' : (${r.cleanlinessRating == 'POOR'} ? 'badge-orange' : 'badge-red')))" th:text="${r.cleanlinessRating}"></span></td>
+                    <td th:text="${r.recordedBy.fullName}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(qualityRecords)}"><td colspan="7" class="text-center" style="padding:20px;color:var(--text-tertiary)">No quality records yet</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Maintenance History -->
+    <div class="table-container">
+        <div class="card-header"><span>🔧 Maintenance History</span></div>
+        <table>
+            <thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Technician</th><th>Cost</th></tr></thead>
+            <tbody>
+                <tr th:each="m : ${maintenanceLogs}">
+                    <td th:text="${#temporals.format(m.performedAt, 'MMM dd, yyyy')}"></td>
+                    <td><span class="badge badge-gray" th:text="${#strings.replace(m.maintenanceType,'_',' ')}"></span></td>
+                    <td th:text="${m.description}"></td>
+                    <td th:text="${m.performedBy.fullName}"></td>
+                    <td th:text="${m.cost != null} ? '₱' + ${#numbers.formatDecimal(m.cost, 1, 2)} : '—'"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(maintenanceLogs)}"><td colspan="5" class="text-center" style="padding:20px;color:var(--text-tertiary)">No maintenance records</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</div>
+</body>
+</html>
