@@ -67,44 +67,45 @@
             color: #999;
         }
 
-      .toggle-btn {
-    float: right;
-    background: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 12px;
-}
+        .toggle-btn {
+            float: right;
+            background: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        }
 
-          /* Dark mode styles */
-          body.dark {
-              background: #121212;
-              color: #e0e0e0;
-          }
-          
-          body.dark .header {
-              background: #0d47a1;
-          }
-          
-          body.dark .card {
-              background: #1e1e1e;
-              color: #e0e0e0;
-              box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-          }
-          
-          body.dark .card p {
-              color: #aaa;
-          }
-          
-          body.dark .footer {
-              color: #777;
-          }
-          
-          body.dark .toggle-btn {
-              background: #333;
-              color: white;
-          }
+        /* Dark mode styles */
+        body.dark {
+            background: #121212;
+            color: #e0e0e0;
+        }
+        
+        body.dark .header {
+            background: #0d47a1;
+        }
+        
+        body.dark .card {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+        }
+        
+        body.dark .card p {
+            color: #aaa;
+        }
+        
+        body.dark .footer {
+            color: #777;
+        }
+        
+        body.dark .toggle-btn {
+            background: #333;
+            color: white;
+        }
     </style>
 </head>
 
@@ -112,7 +113,7 @@
 
 <div class="header">
     💧 HydroTrack Control Center
-    <button onclick="toggleDarkMode()" class="toggle-btn">🌙 Dark Mode</button>
+    <button id="theme-btn" onclick="toggleDarkMode()" class="toggle-btn">🌙 Dark Mode</button>
 </div>
 
 <div class="container">
@@ -165,21 +166,29 @@
 <script>
 function toggleDarkMode() {
     document.body.classList.toggle("dark");
+    const btn = document.getElementById("theme-btn");
 
-    // save preference
     if (document.body.classList.contains("dark")) {
         localStorage.setItem("theme", "dark");
+        if (btn) btn.textContent = "☀️ Light Mode";
     } else {
         localStorage.setItem("theme", "light");
+        if (btn) btn.textContent = "🌙 Dark Mode";
     }
 }
-
-// load saved theme
-window.onload = function () {
-    if (localStorage.getItem("theme") === "dark") {
+(function () {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
         document.body.classList.add("dark");
     }
-};
+})();
+
+window.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById("theme-btn");
+    if (localStorage.getItem("theme") === "dark" && btn) {
+        btn.textContent = "☀️ Light Mode";
+    }
+});
 </script>
 </body>
 </html>
