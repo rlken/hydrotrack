@@ -67,7 +67,7 @@
     </main>
 </div>
 <script>
-    function toggleDarkMode() {
+    window.toggleDarkMode = function() {
         document.body.classList.toggle("dark");
         const btn = document.getElementById("theme-btn");
         
@@ -78,8 +78,8 @@
             localStorage.setItem("theme", "light");
             if (btn) btn.textContent = "🌙 Dark Mode";
         }
-    }
-    function applyGlobalTheme() {
+    };
+    window.applyGlobalTheme = function() {
         const savedTheme = localStorage.getItem("theme");
         const btn = document.getElementById("theme-btn");
 
@@ -90,10 +90,9 @@
             document.body.classList.remove("dark");
             if (btn) btn.textContent = "🌙 Dark Mode";
         }
-    }
-    window.addEventListener('DOMContentLoaded', applyGlobalTheme);
+    };
+    window.addEventListener('DOMContentLoaded', window.applyGlobalTheme);
 </script>
-<script th:src="@{/js/app.js}"></script>  
 <script th:src="@{/js/app.js}"></script>
 </body>
 </html>
