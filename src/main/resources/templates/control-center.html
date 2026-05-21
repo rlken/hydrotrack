@@ -20,14 +20,14 @@
 
         .container {
             padding: 30px;
-            max-width: 1100px;
+            max-width: 1200px; 
             margin: auto;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
         }
 
         .card {
@@ -38,6 +38,8 @@
             color: #333;
             box-shadow: 0 6px 18px rgba(0,0,0,0.08);
             transition: 0.2s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
@@ -47,22 +49,25 @@
 
         .card h3 {
             margin: 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
 
         .card p {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
+            line-height: 1.4;
+            margin: 0;
         }
 
         .icon {
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 32px;
+            margin-bottom: 12px;
         }
 
         .footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 50px;
             font-size: 12px;
             color: #999;
         }
@@ -76,6 +81,24 @@
             cursor: pointer;
             font-size: 12px;
             font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr); 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr); 
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: 1fr; 
+            }
         }
 
         /* Dark mode styles */
@@ -117,7 +140,6 @@
 </div>
 
 <div class="container">
-
     <div class="grid">
 
         <a href="/dashboard" class="card">
@@ -127,7 +149,7 @@
         </a>
 
         <a href="/fountains" class="card">
-            <div class="icon">⛲</div>
+            <div class="icon"> Fountain icon ⛲</div>
             <h3>Fountains</h3>
             <p>Manage water fountain locations and status</p>
         </a>
@@ -150,12 +172,6 @@
             <p>Log repairs and system maintenance</p>
         </a>
 
-        <a href="/settings" class="card">
-            <div class="icon">⚙️</div>
-            <h3>Settings</h3>
-            <p>Manage your profile and system preferences</p>
-        </a>
-
     </div>
 
     <div class="footer">
@@ -163,6 +179,7 @@
     </div>
 
 </div>
+
 <script>
 function toggleDarkMode() {
     document.body.classList.toggle("dark");
@@ -176,6 +193,7 @@ function toggleDarkMode() {
         if (btn) btn.textContent = "🌙 Dark Mode";
     }
 }
+
 (function () {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
