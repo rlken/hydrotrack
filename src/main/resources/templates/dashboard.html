@@ -116,27 +116,5 @@
     </div>
 </section>
 </div>
-<script>
-function toggleDarkMode() {
-    document.body.classList.toggle("dark");
-    const btn = document.getElementById("theme-btn");
-    
-    if (document.body.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-        if (btn) btn.textContent = "☀️ Light Mode";
-    } else {
-        localStorage.setItem("theme", "light");
-        if (btn) btn.textContent = "🌙 Dark Mode";
-    }
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById("theme-btn");
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-        if (btn) btn.textContent = "☀️ Light Mode";
-    }
-});
-</script>
 </body>
 </html>
