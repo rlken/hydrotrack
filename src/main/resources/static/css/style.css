@@ -461,3 +461,34 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .align-center { align-items: center; }
 .justify-between { justify-content: space-between; }
 .w-full { width: 100%; }
+
+/* ======================== DARK MODE ======================== */
+body.dark {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+body.dark .header,
+body.dark .navbar {
+    background-color: #0d47a1;
+}
+body.dark .card,
+body.dark .container,
+body.dark .dashboard-card {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark p,
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark span {
+    color: #e0e0e0;
+}
+body.dark a {
+    color: #90caf9;
+}
+body.dark button {
+    background-color: #333;
+    color: white;
+}
