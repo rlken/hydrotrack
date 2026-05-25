@@ -39,7 +39,7 @@
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Floor</div>
-                    <div class="detail-value" th:text="'Floor ' + ${fountain.floorNumber}"></div>
+                    <div class="detail-value" th:text="${floorLabel.apply(fountain.floorNumber)}"></div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Installed</div>
