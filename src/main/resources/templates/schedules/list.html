@@ -17,7 +17,7 @@
             <tbody>
                 <tr th:each="s : ${allSchedules}">
                     <td th:text="${s.fountain.fountainCode}"></td>
-                    <td th:text="'F' + ${s.fountain.floorNumber}"></td>
+                    <td th:text="${floorLabel.apply(s.fountain.floorNumber)}"></td>
                     <td th:text="${s.filterType}"></td>
                     <td th:text="${s.replacementIntervalDays} + ' days'"></td>
                     <td th:text="${s.nextReplacementDate}"></td>

@@ -22,7 +22,7 @@
                 <tr th:each="r : ${records}">
                     <td th:text="${#temporals.format(r.recordedAt, 'MMM dd, yyyy HH:mm')}"></td>
                     <td><a th:href="@{/fountains/{id}(id=${r.fountain.fountainId})}" th:text="${r.fountain.fountainCode}"></a></td>
-                    <td th:text="'F' + ${r.fountain.floorNumber}"></td>
+                    <td th:text="${floorLabel.apply(r.fountain.floorNumber)}"></td>
                     <td th:text="${r.phLevel}"></td>
                     <td th:text="${r.turbidity}"></td>
                     <td th:text="${r.tds}"></td>

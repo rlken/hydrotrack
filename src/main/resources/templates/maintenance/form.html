@@ -17,7 +17,7 @@
                 <label>Fountain</label>
                 <select name="fountainId" class="form-control" required>
                     <option value="">Select fountain...</option>
-                    <option th:each="f : ${fountains}" th:value="${f.fountainId}" th:text="${f.fountainCode + ' — F' + f.floorNumber + ' — ' + f.locationDescription}"></option>
+                    <option th:each="f : ${fountains}" th:value="${f.fountainId}" th:text="${f.fountainCode + ' - ' + floorLabel.apply(f.floorNumber) + ' - ' + f.locationDescription}"></option>
                 </select>
             </div>
             <div class="form-row">

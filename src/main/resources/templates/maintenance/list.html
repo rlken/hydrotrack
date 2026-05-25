@@ -18,7 +18,7 @@
                 <tr th:each="m : ${logs}">
                     <td th:text="${#temporals.format(m.performedAt, 'MMM dd, yyyy')}"></td>
                     <td><a th:href="@{/fountains/{id}(id=${m.fountain.fountainId})}" th:text="${m.fountain.fountainCode}"></a></td>
-                    <td th:text="'F' + ${m.fountain.floorNumber}"></td>
+                    <td th:text="${floorLabel.apply(m.fountain.floorNumber)}"></td>
                     <td><span class="badge badge-gray" th:text="${#strings.replace(m.maintenanceType,'_',' ')}"></span></td>
                     <td th:text="${m.description}"></td>
                     <td th:text="${m.performedBy.fullName}"></td>

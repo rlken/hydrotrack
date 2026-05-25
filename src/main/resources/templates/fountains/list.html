@@ -22,7 +22,7 @@
         <form th:action="@{/fountains}" method="get" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
             <select name="floor" class="form-control" style="width:auto" onchange="this.form.submit()">
                 <option value="">All Floors</option>
-                <option th:each="f : ${floors}" th:value="${f}" th:text="'Floor ' + ${f}" th:selected="${f == selectedFloor}"></option>
+                <option th:each="f : ${floors}" th:value="${f}" th:text="${floorLabel.apply(f)}" th:selected="${f == selectedFloor}"></option>
             </select>
             <select name="status" class="form-control" style="width:auto" onchange="this.form.submit()" sec:authorize="!hasRole('VIEWER')">
                 <option value="">All Status</option>
@@ -57,8 +57,8 @@
             <div class="fc-location"><span class="ui-icon icon-location" aria-hidden="true"></span> <span th:text="${f.locationDescription}">Ground Floor Lobby</span></div>
             <div class="fc-metrics">
                 <div class="fc-metric">
-                    <strong th:text="'F' + ${f.floorNumber}">F1</strong>
-                    Floor
+                    <strong th:text="${floorLabel.apply(f.floorNumber)}">1st Floor</strong>
+                    Level
                 </div>
                 <div class="fc-metric" th:if="${f.lastFilterChange != null}">
                     <strong th:text="${f.lastFilterChange}">2025-03-01</strong>
