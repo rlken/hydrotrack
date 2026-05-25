@@ -9,8 +9,10 @@
 <section>
     <div class="page-header">
         <div>
-            <h2>Water Fountains</h2>
-            <p>All fountains &amp; dispensers in NU Manila Main Building</p>
+            <h2 sec:authorize="!hasRole('VIEWER')">Water Fountains</h2>
+            <h2 sec:authorize="hasRole('VIEWER')">Find a Water Station</h2>
+            <p sec:authorize="!hasRole('VIEWER')">All fountains &amp; dispensers in NU Manila Main Building</p>
+            <p sec:authorize="hasRole('VIEWER')">Choose a refill point and check if it is ready before you go.</p>
         </div>
         <a th:href="@{/fountains/new}" class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN','TECHNICIAN')">+ Add Fountain</a>
     </div>
@@ -22,12 +24,19 @@
                 <option value="">All Floors</option>
                 <option th:each="f : ${floors}" th:value="${f}" th:text="'Floor ' + ${f}" th:selected="${f == selectedFloor}"></option>
             </select>
-            <select name="status" class="form-control" style="width:auto" onchange="this.form.submit()">
+            <select name="status" class="form-control" style="width:auto" onchange="this.form.submit()" sec:authorize="!hasRole('VIEWER')">
                 <option value="">All Status</option>
                 <option value="OPERATIONAL" th:selected="${'OPERATIONAL' == selectedStatus}">Operational</option>
                 <option value="NEEDS_MAINTENANCE" th:selected="${'NEEDS_MAINTENANCE' == selectedStatus}">Needs Maintenance</option>
                 <option value="OUT_OF_SERVICE" th:selected="${'OUT_OF_SERVICE' == selectedStatus}">Out of Service</option>
                 <option value="UNDER_REPAIR" th:selected="${'UNDER_REPAIR' == selectedStatus}">Under Repair</option>
+            </select>
+            <select name="status" class="form-control" style="width:auto" onchange="this.form.submit()" sec:authorize="hasRole('VIEWER')">
+                <option value="">Any availability</option>
+                <option value="OPERATIONAL" th:selected="${'OPERATIONAL' == selectedStatus}">Ready to use</option>
+                <option value="NEEDS_MAINTENANCE" th:selected="${'NEEDS_MAINTENANCE' == selectedStatus}">Check before using</option>
+                <option value="OUT_OF_SERVICE" th:selected="${'OUT_OF_SERVICE' == selectedStatus}">Unavailable</option>
+                <option value="UNDER_REPAIR" th:selected="${'UNDER_REPAIR' == selectedStatus}">Under repair</option>
             </select>
             <a th:href="@{/fountains}" class="btn btn-sm btn-secondary">Clear</a>
         </form>
@@ -43,9 +52,9 @@
                 </div>
                 <span class="badge"
                     th:classappend="${f.status == 'OPERATIONAL'} ? 'badge-green' : (${f.status == 'NEEDS_MAINTENANCE'} ? 'badge-orange' : (${f.status == 'OUT_OF_SERVICE'} ? 'badge-red' : 'badge-yellow'))"
-                    th:text="${#strings.replace(f.status, '_', ' ')}">OPERATIONAL</span>
+                    th:text="${f.status == 'OPERATIONAL'} ? 'Ready' : (${f.status == 'NEEDS_MAINTENANCE'} ? 'Check first' : (${f.status == 'OUT_OF_SERVICE'} ? 'Unavailable' : 'Repair'))">Ready</span>
             </div>
-            <div class="fc-location">📍 <span th:text="${f.locationDescription}">Ground Floor Lobby</span></div>
+            <div class="fc-location"><span class="ui-icon icon-location" aria-hidden="true"></span> <span th:text="${f.locationDescription}">Ground Floor Lobby</span></div>
             <div class="fc-metrics">
                 <div class="fc-metric">
                     <strong th:text="'F' + ${f.floorNumber}">F1</strong>
@@ -60,7 +69,7 @@
     </div>
 
     <div th:if="${#lists.isEmpty(fountains)}" class="empty-state">
-        <div class="icon">🚰</div>
+        <div class="icon"><span class="ui-icon icon-fountain" aria-hidden="true"></span></div>
         <p>No fountains found matching your criteria</p>
     </div>
 </section>

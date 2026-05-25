@@ -35,7 +35,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
-                .requestMatchers("/login", "/error").permitAll()
+                .requestMatchers("/login", "/register", "/forgot-password", "/error").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/fountains/new", "/fountains/edit/**", "/fountains/delete/**")
                     .hasAnyRole("ADMIN", "TECHNICIAN")

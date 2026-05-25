@@ -2,6 +2,7 @@ package com.hydrotrack.controller;
 
 import com.hydrotrack.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -59,8 +60,13 @@ public class UserController {
     }
 
     @PostMapping("/users/delete/{id}")
-    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteUser(@PathVariable Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
         try {
+            var user = userService.findById(id);
+            if (user != null && user.getUsername().equals(authentication.getName())) {
+                redirectAttributes.addFlashAttribute("error", "You cannot delete the account you are currently using.");
+                return "redirect:/admin/users";
+            }
             userService.deleteUser(id);
             redirectAttributes.addFlashAttribute("success", "User deleted successfully!");
         } catch (Exception e) {
