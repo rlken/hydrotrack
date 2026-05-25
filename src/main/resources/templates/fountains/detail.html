@@ -10,7 +10,8 @@
     <div class="page-header">
         <div>
             <h2 th:text="${fountain.fountainCode}">NM-G01</h2>
-            <p th:text="${fountain.locationDescription}">Ground Floor Lobby</p>
+            <p sec:authorize="!hasRole('VIEWER')" th:text="${fountain.locationDescription}">Ground Floor Lobby</p>
+            <p sec:authorize="hasRole('VIEWER')">Station details and current availability</p>
         </div>
         <div style="display:flex;gap:8px">
             <a th:href="@{/fountains/edit/{id}(id=${fountain.fountainId})}" class="btn btn-secondary btn-sm" sec:authorize="hasAnyRole('ADMIN','TECHNICIAN')">Edit</a>
@@ -23,9 +24,14 @@
         <div class="card-body">
             <div class="detail-grid">
                 <div class="detail-item">
-                    <div class="detail-label">Status</div>
+                    <div class="detail-label" sec:authorize="!hasRole('VIEWER')">Status</div>
+                    <div class="detail-label" sec:authorize="hasRole('VIEWER')">Availability</div>
                     <span class="badge" th:classappend="${fountain.status == 'OPERATIONAL'} ? 'badge-green' : (${fountain.status == 'NEEDS_MAINTENANCE'} ? 'badge-orange' : (${fountain.status == 'OUT_OF_SERVICE'} ? 'badge-red' : 'badge-yellow'))"
-                        th:text="${#strings.replace(fountain.status,'_',' ')}">OPERATIONAL</span>
+                        th:text="${fountain.status == 'OPERATIONAL'} ? 'Ready to use' : (${fountain.status == 'NEEDS_MAINTENANCE'} ? 'Check before using' : (${fountain.status == 'OUT_OF_SERVICE'} ? 'Unavailable' : 'Under repair'))">Ready to use</span>
+                </div>
+                <div class="detail-item" sec:authorize="hasRole('VIEWER')">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value" th:text="${fountain.locationDescription}"></div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Type</div>
@@ -53,8 +59,14 @@
     </div>
 
     <!-- Quality History -->
-    <div class="table-container mb-3">
-        <div class="card-header"><span>💧 Water Quality History</span></div>
+    <div class="guest-help-panel mb-3" sec:authorize="hasRole('VIEWER')">
+        <h3>Simple guide</h3>
+        <p th:if="${fountain.status == 'OPERATIONAL'}">This station is marked ready. Bring your reusable bottle and refill here.</p>
+        <p th:if="${fountain.status != 'OPERATIONAL'}">This station may not be the best choice right now. Try another nearby station if you need water.</p>
+    </div>
+
+    <div class="table-container mb-3" sec:authorize="!hasRole('VIEWER')">
+        <div class="card-header"><span class="section-title-icon"><span class="ui-icon icon-quality" aria-hidden="true"></span> Water Quality History</span></div>
         <table>
             <thead><tr><th>Date</th><th>pH</th><th>Turbidity</th><th>TDS</th><th>Temp</th><th>Rating</th><th>Inspector</th></tr></thead>
             <tbody>
@@ -73,8 +85,8 @@
     </div>
 
     <!-- Maintenance History -->
-    <div class="table-container">
-        <div class="card-header"><span>🔧 Maintenance History</span></div>
+    <div class="table-container" sec:authorize="!hasRole('VIEWER')">
+        <div class="card-header"><span class="section-title-icon"><span class="ui-icon icon-maintenance" aria-hidden="true"></span> Maintenance History</span></div>
         <table>
             <thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Technician</th><th>Cost</th></tr></thead>
             <tbody>

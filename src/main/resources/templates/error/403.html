@@ -8,7 +8,7 @@
 <div th:replace="~{layout :: layout(~{::section})}">
 <section>
     <div class="empty-state" style="padding-top:100px">
-        <div class="icon">🔒</div>
+        <div class="icon"><span class="ui-icon icon-lock" aria-hidden="true"></span></div>
         <h2 style="margin-bottom:8px">Access Denied</h2>
         <p th:text="${errorMessage}">You do not have permission to access this page.</p>
         <a th:href="@{/dashboard}" class="btn btn-primary mt-2">← Back to Dashboard</a>

@@ -9,63 +9,109 @@
 <body>
 <div th:replace="~{layout :: layout(~{::section})}">
 <section>
-    <div class="page-header">
+    <div class="page-header" sec:authorize="!hasRole('VIEWER')">
         <div>
             <h2>Dashboard</h2>
             <p>Overview of water fountain status across NU Manila Main Building</p>
         </div>
-        <button onclick="toggleDarkMode()" id="theme-btn" class="toggle-btn">M11; Dark Mode</button>
+        <button onclick="toggleDarkMode()" id="theme-btn" class="toggle-btn">Dark Mode</button>
     </div>
 
     <!-- Stats Cards -->
-    <div class="stats-grid">
+    <div class="guest-overview" sec:authorize="hasRole('VIEWER')">
+        <div>
+            <p class="eyebrow">Guest water guide</p>
+            <h2>Find clean water faster.</h2>
+            <p>Use this page to see how many refill stations are available and which ones may need attention before you visit.</p>
+        </div>
+        <a th:href="@{/fountains}" class="btn btn-primary">Find a station</a>
+    </div>
+
+    <div class="stats-grid guest-stats" sec:authorize="hasRole('VIEWER')">
+        <div class="stat-card green">
+            <div class="stat-icon"><span class="ui-icon icon-check" aria-hidden="true"></span></div>
+            <div class="stat-value" th:text="${operationalCount}">0</div>
+            <div class="stat-label">Ready to use</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-icon"><span class="ui-icon icon-alert" aria-hidden="true"></span></div>
+            <div class="stat-value" th:text="${needsMaintenanceCount}">0</div>
+            <div class="stat-label">Check before using</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-icon"><span class="ui-icon icon-offline" aria-hidden="true"></span></div>
+            <div class="stat-value" th:text="${outOfServiceCount}">0</div>
+            <div class="stat-label">Temporarily unavailable</div>
+        </div>
+    </div>
+
+    <div class="guest-help-grid" sec:authorize="hasRole('VIEWER')">
+        <section class="guest-help-panel">
+            <h3>What the labels mean</h3>
+            <div class="guest-status-list">
+                <span class="badge badge-green">Ready to use</span>
+                <p>The station is marked operational.</p>
+                <span class="badge badge-orange">Check before using</span>
+                <p>The station may need cleaning, filter work, or a quick inspection.</p>
+                <span class="badge badge-red">Unavailable</span>
+                <p>The station is out of service or under repair.</p>
+            </div>
+        </section>
+        <section class="guest-help-panel">
+            <h3>Refill habit</h3>
+            <p>Bring a reusable bottle, choose an available station, and help reduce single-use plastic waste one refill at a time.</p>
+            <a th:href="@{/fountains}" class="btn btn-secondary btn-sm">View stations</a>
+        </section>
+    </div>
+
+    <div class="stats-grid" sec:authorize="!hasRole('VIEWER')">
         <div class="stat-card blue">
-            <div class="stat-icon">🚰</div>
+            <div class="stat-icon"><span class="ui-icon icon-fountain" aria-hidden="true"></span></div>
             <div class="stat-value" th:text="${totalFountains}">0</div>
             <div class="stat-label">Total Fountains</div>
         </div>
         <div class="stat-card green">
-            <div class="stat-icon">✅</div>
+            <div class="stat-icon"><span class="ui-icon icon-check" aria-hidden="true"></span></div>
             <div class="stat-value" th:text="${operationalCount}">0</div>
             <div class="stat-label">Operational</div>
         </div>
         <div class="stat-card orange">
-            <div class="stat-icon">⚠️</div>
+            <div class="stat-icon"><span class="ui-icon icon-alert" aria-hidden="true"></span></div>
             <div class="stat-value" th:text="${needsMaintenanceCount}">0</div>
             <div class="stat-label">Needs Maintenance</div>
         </div>
         <div class="stat-card red">
-            <div class="stat-icon">🚫</div>
+            <div class="stat-icon"><span class="ui-icon icon-offline" aria-hidden="true"></span></div>
             <div class="stat-value" th:text="${outOfServiceCount}">0</div>
             <div class="stat-label">Out of Service</div>
         </div>
     </div>
 
     <!-- Second row stats -->
-    <div class="stats-grid">
+    <div class="stats-grid" sec:authorize="!hasRole('VIEWER')">
         <div class="stat-card blue">
-            <div class="stat-icon">📋</div>
+            <div class="stat-icon"><span class="ui-icon icon-records" aria-hidden="true"></span></div>
             <div class="stat-value" th:text="${totalRecords}">0</div>
             <div class="stat-label">Quality Records</div>
         </div>
         <div class="stat-card green">
-            <div class="stat-icon">⭐</div>
+            <div class="stat-icon"><span class="ui-icon icon-star" aria-hidden="true"></span></div>
             <div class="stat-value" th:text="${excellentCount}">0</div>
             <div class="stat-label">Excellent Ratings</div>
         </div>
         <div class="stat-card red">
-            <div class="stat-icon">🔴</div>
+            <div class="stat-icon"><span class="ui-icon icon-alert" aria-hidden="true"></span></div>
             <div class="stat-value" th:text="${overdueFilters}">0</div>
             <div class="stat-label">Overdue Filters</div>
         </div>
         <div class="stat-card orange">
-            <div class="stat-icon">🔧</div>
+            <div class="stat-icon"><span class="ui-icon icon-maintenance" aria-hidden="true"></span></div>
             <div class="stat-value" th:text="${maintenanceThisMonth}">0</div>
             <div class="stat-label">Maintenance This Month</div>
         </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" sec:authorize="!hasRole('VIEWER')">
         <!-- Recent Quality Records -->
         <div class="table-container">
             <div class="card-header">
@@ -94,7 +140,7 @@
         <!-- Overdue Filters -->
         <div class="table-container">
             <div class="card-header">
-                <span>⚠️ Overdue Filters</span>
+                <span class="section-title-icon"><span class="ui-icon icon-alert" aria-hidden="true"></span> Overdue Filters</span>
                 <a th:href="@{/schedules}" class="btn btn-sm btn-secondary">View All</a>
             </div>
             <table>
@@ -108,7 +154,7 @@
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(overdueSchedules)}">
-                        <td colspan="3" class="text-center" style="padding:24px;color:var(--text-tertiary)">No overdue filters 🎉</td>
+                        <td colspan="3" class="text-center" style="padding:24px;color:var(--text-tertiary)">No overdue filters</td>
                     </tr>
                 </tbody>
             </table>

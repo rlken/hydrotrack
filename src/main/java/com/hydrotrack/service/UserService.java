@@ -85,6 +85,24 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
+    public User createGuestAccount(String username, String email, String fullName, String password) {
+        return createUser(username, email, fullName, password, "VIEWER");
+    }
+
+    @Transactional
+    public void resetPassword(String username, String email, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("No user found with that username and email"));
+
+        if (!user.getEmail().equalsIgnoreCase(email)) {
+            throw new RuntimeException("No user found with that username and email");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Transactional
     public User updateUser(Long userId, String fullName, String email, String roleName, Boolean isActive) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));

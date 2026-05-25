@@ -63,13 +63,25 @@
                         <span class="badge" th:classappend="${u.isActive} ? 'badge-green' : 'badge-red'" th:text="${u.isActive} ? 'Active' : 'Disabled'"></span>
                     </td>
                     <td>
-                        <form th:action="@{/admin/users/edit/{id}(id=${u.userId})}" method="post" style="display:inline">
+                        <div class="action-row">
+                        <form th:action="@{/admin/users/edit/{id}(id=${u.userId})}" method="post">
                             <input type="hidden" name="fullName" th:value="${u.fullName}">
                             <input type="hidden" name="email" th:value="${u.email}">
                             <input type="hidden" name="role" th:value="${#lists.isEmpty(u.roles)} ? '' : ${u.roles.iterator().next().roleName}">
                             <input type="hidden" name="isActive" th:value="${!u.isActive}">
                             <button type="submit" class="btn btn-sm btn-secondary" th:text="${u.isActive} ? 'Disable' : 'Enable'">Toggle</button>
                         </form>
+                        <form th:if="${u.username != #authentication.name}"
+                              th:action="@{/admin/users/delete/{id}(id=${u.userId})}"
+                              method="post"
+                              onsubmit="return confirm('Delete this account permanently?');">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <span class="ui-icon icon-trash" aria-hidden="true"></span>
+                                Delete
+                            </button>
+                        </form>
+                        <span th:if="${u.username == #authentication.name}" class="badge badge-gray">Current account</span>
+                        </div>
                     </td>
                 </tr>
             </tbody>

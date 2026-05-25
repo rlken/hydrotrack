@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - HydroTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="public-body">
+<main class="auth-page">
+    <a class="public-brand auth-brand" th:href="@{/login}" aria-label="Back to HydroTrack sign in">
+        <span class="brand-mark">H</span>
+        <span>
+            HydroTrack
+            <small>SDG 6 water stewardship</small>
+        </span>
+    </a>
+
+    <section class="auth-shell" aria-label="Create guest account">
+        <div class="auth-copy">
+            <p class="eyebrow">Guest access</p>
+            <h1>Create your HydroTrack account.</h1>
+            <p>
+                Join as a viewer to explore fountain status, water quality records,
+                and refill progress across the campus network.
+            </p>
+        </div>
+
+        <div class="login-card">
+            <div class="login-card-header">
+                <div class="login-logo">H</div>
+                <div>
+                    <h2>Create account</h2>
+                    <p>Guest accounts are created as viewers</p>
+                </div>
+            </div>
+
+            <div th:if="${error}" class="alert alert-error" th:text="${error}">
+                Could not create account
+            </div>
+
+            <form th:action="@{/register}" method="post">
+                <div class="form-group">
+                    <label for="fullName">Full name</label>
+                    <input id="fullName" type="text" name="fullName" class="form-control" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" type="text" name="username" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" name="password" class="form-control" minlength="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm password</label>
+                        <input id="confirmPassword" type="password" name="confirmPassword" class="form-control" minlength="6" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Create account</button>
+            </form>
+            <div class="auth-links">
+                <a th:href="@{/login}">Already have an account?</a>
+                <a th:href="@{/forgot-password}">Forgot password?</a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

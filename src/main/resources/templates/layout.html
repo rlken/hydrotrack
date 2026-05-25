@@ -8,7 +8,9 @@
 </head>
 <body>
 <div th:fragment="layout(content)" class="app-layout">
-    <button class="mobile-toggle">☰</button>
+    <button class="mobile-toggle" aria-label="Open navigation">
+        <span class="ui-icon icon-menu" aria-hidden="true"></span>
+    </button>
     <script>
         (function() {
             const savedTheme = localStorage.getItem("theme");
@@ -24,53 +26,58 @@
             
             if (document.body.classList.contains("dark")) {
                 localStorage.setItem("theme", "dark");
-                if (btn) btn.textContent = "☀️ Light Mode";
+                if (btn) btn.textContent = "Light Mode";
             } else {
                 localStorage.setItem("theme", "light");
-                if (btn) btn.textContent = "🌙 Dark Mode";
+                if (btn) btn.textContent = "Dark Mode";
             }
         };
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.getElementById("theme-btn");
             if (localStorage.getItem("theme") === "dark" && btn) {
-                btn.textContent = "☀️ Light Mode";
+                btn.textContent = "Light Mode";
             }
         });
     </script>
-    <button class="mobile-toggle">☰</button>
     
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <h1>💧 HydroTrack</h1>
+            <h1><span class="brand-icon" aria-hidden="true"></span> HydroTrack</h1>
             <span>NU Manila Main Building</span>
         </div>
         <nav class="sidebar-nav">
             <div class="nav-section">
-                <div class="nav-section-title">Overview</div>
+                <div class="nav-section-title" sec:authorize="!hasRole('VIEWER')">Overview</div>
+                <div class="nav-section-title" sec:authorize="hasRole('VIEWER')">Guest View</div>
                 <a th:href="@{/dashboard}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/dashboard')} ? 'active'">
-                    <span class="icon">📊</span> Dashboard
+                    <span class="ui-icon icon-dashboard" aria-hidden="true"></span>
+                    <span sec:authorize="!hasRole('VIEWER')">Dashboard</span>
+                    <span sec:authorize="hasRole('VIEWER')">Water Overview</span>
                 </a>
             </div>
             <div class="nav-section">
-                <div class="nav-section-title">Management</div>
+                <div class="nav-section-title" sec:authorize="!hasRole('VIEWER')">Management</div>
+                <div class="nav-section-title" sec:authorize="hasRole('VIEWER')">Explore</div>
                 <a th:href="@{/fountains}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/fountains')} ? 'active'">
-                    <span class="icon">🚰</span> Fountains
+                    <span class="ui-icon icon-fountain" aria-hidden="true"></span>
+                    <span sec:authorize="!hasRole('VIEWER')">Fountains</span>
+                    <span sec:authorize="hasRole('VIEWER')">Find Stations</span>
                 </a>
-                <a th:href="@{/quality}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/quality')} ? 'active'">
-                    <span class="icon">💧</span> Water Quality
+                <a th:href="@{/quality}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/quality')} ? 'active'" sec:authorize="!hasRole('VIEWER')">
+                    <span class="ui-icon icon-quality" aria-hidden="true"></span> Water Quality
                 </a>
-                <a th:href="@{/schedules}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/schedules')} ? 'active'">
-                    <span class="icon">📅</span> Filter Schedules
+                <a th:href="@{/schedules}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/schedules')} ? 'active'" sec:authorize="!hasRole('VIEWER')">
+                    <span class="ui-icon icon-calendar" aria-hidden="true"></span> Filter Schedules
                 </a>
-                <a th:href="@{/maintenance}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/maintenance')} ? 'active'">
-                    <span class="icon">🔧</span> Maintenance
+                <a th:href="@{/maintenance}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/maintenance')} ? 'active'" sec:authorize="!hasRole('VIEWER')">
+                    <span class="ui-icon icon-maintenance" aria-hidden="true"></span> Maintenance
                 </a>
             </div>
             <div class="nav-section" sec:authorize="hasRole('ADMIN')">
                 <div class="nav-section-title">Admin</div>
                 <a th:href="@{/admin/users}" class="nav-link" th:classappend="${#strings.startsWith(requestURI,'/admin')} ? 'active'">
-                    <span class="icon">👥</span> User Management
+                    <span class="ui-icon icon-users" aria-hidden="true"></span> User Management
                 </a>
             </div>
         </nav>
@@ -90,8 +97,8 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <div th:if="${success}" class="alert alert-success">✅ <span th:text="${success}"></span></div>
-        <div th:if="${error}" class="alert alert-error">❌ <span th:text="${error}"></span></div>
+        <div th:if="${success}" class="alert alert-success"><span class="ui-icon icon-check" aria-hidden="true"></span><span th:text="${success}"></span></div>
+        <div th:if="${error}" class="alert alert-error"><span class="ui-icon icon-alert" aria-hidden="true"></span><span th:text="${error}"></span></div>
         <div th:replace="${content}"></div>
     </main>
 </div>
