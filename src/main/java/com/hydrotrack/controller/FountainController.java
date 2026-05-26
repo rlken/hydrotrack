@@ -20,18 +20,18 @@ public class FountainController {
     private final ScheduleService scheduleService;
     private final MaintenanceService maintenanceService;
 
-    public FountainController(FountainService fountainService, WaterQualityService waterQualityService, ScheduleService scheduleService, MaintenanceService maintenanceService) {
+    public FountainController(FountainService fountainService, WaterQualityService waterQualityService,
+            ScheduleService scheduleService, MaintenanceService maintenanceService) {
         this.fountainService = fountainService;
         this.waterQualityService = waterQualityService;
         this.scheduleService = scheduleService;
         this.maintenanceService = maintenanceService;
     }
 
-
     @GetMapping
     public String listFountains(@RequestParam(required = false) Integer floor,
-                                 @RequestParam(required = false) String status,
-                                 Model model) {
+            @RequestParam(required = false) String status,
+            Model model) {
         List<Fountain> fountains;
 
         if (floor != null) {
@@ -74,14 +74,15 @@ public class FountainController {
     @PostMapping("/new")
     @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public String createFountain(@RequestParam String fountainCode,
-                                  @RequestParam String fountainType,
-                                  @RequestParam Integer floorNumber,
-                                  @RequestParam(required = false) String locationDescription,
-                                  @RequestParam(required = false) String installationDate,
-                                  RedirectAttributes redirectAttributes) {
+            @RequestParam String fountainType,
+            @RequestParam Integer floorNumber,
+            @RequestParam(required = false) String locationDescription,
+            @RequestParam(required = false) String installationDate,
+            RedirectAttributes redirectAttributes) {
         try {
             LocalDate instDate = (installationDate != null && !installationDate.isEmpty())
-                    ? LocalDate.parse(installationDate) : null;
+                    ? LocalDate.parse(installationDate)
+                    : null;
             fountainService.createFountain(fountainCode, fountainType, floorNumber,
                     locationDescription, instDate);
             redirectAttributes.addFlashAttribute("success", "Fountain created successfully!");
@@ -105,13 +106,15 @@ public class FountainController {
     @PostMapping("/edit/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public String updateFountain(@PathVariable Long id,
-                                  @RequestParam String fountainType,
-                                  @RequestParam Integer floorNumber,
-                                  @RequestParam(required = false) String locationDescription,
-                                  @RequestParam String status,
-                                  RedirectAttributes redirectAttributes) {
+            @RequestParam String fountainCode,
+            @RequestParam String fountainType,
+            @RequestParam Integer floorNumber,
+            @RequestParam(required = false) String locationDescription,
+            @RequestParam String status,
+            RedirectAttributes redirectAttributes) {
         try {
-            fountainService.updateFountain(id, fountainType, floorNumber, locationDescription, status);
+
+            fountainService.updateFountain(id, fountainCode, fountainType, floorNumber, locationDescription, status);
             redirectAttributes.addFlashAttribute("success", "Fountain updated successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
