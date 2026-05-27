@@ -19,6 +19,16 @@
         </div>
     </div>
 
+    <div style="display:flex;gap:8px">
+        <a th:href="@{/fountains/edit/{id}(id=${fountain.fountainId})}" class="btn btn-secondary btn-sm" sec:authorize="hasAnyRole('ADMIN','TECHNICIAN')">Edit</a>
+        
+        <form th:action="@{/fountains/delete/{id}(id=${fountain.fountainId})}" method="post" sec:authorize="hasRole('ADMIN')" onsubmit="return confirm('Are you sure you want to delete this fountain?');">
+            <button type="submit" class="btn btn-sm badge-red" style="border: none; cursor: pointer;">Delete</button>
+        </form>
+
+        <a th:href="@{/fountains}" class="btn btn-secondary btn-sm">← Back</a>
+    </div>
+
     <!-- Fountain Info -->
     <div class="card mb-3">
         <div class="card-body">

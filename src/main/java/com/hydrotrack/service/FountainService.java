@@ -19,7 +19,6 @@ public class FountainService {
         this.buildingRepository = buildingRepository;
     }
 
-
     public List<Fountain> findAll() {
         return fountainRepository.findAll();
     }
@@ -50,7 +49,7 @@ public class FountainService {
 
     @Transactional
     public Fountain createFountain(String fountainCode, String fountainType, Integer floorNumber,
-                                    String locationDescription, LocalDate installationDate) {
+            String locationDescription, LocalDate installationDate) {
         // Default to first building (NU Manila Main Building)
         Building building = buildingRepository.findAll().get(0);
 
@@ -67,11 +66,12 @@ public class FountainService {
     }
 
     @Transactional
-    public Fountain updateFountain(Long id, String fountainType, Integer floorNumber,
-                                    String locationDescription, String status) {
+    public Fountain updateFountain(Long id, String fountainCode, String fountainType, Integer floorNumber,
+            String locationDescription, String status) {
         Fountain fountain = fountainRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Fountain not found"));
 
+        fountain.setFountainCode(fountainCode);
         fountain.setFountainType(fountainType);
         fountain.setFloorNumber(floorNumber);
         fountain.setLocationDescription(locationDescription);
